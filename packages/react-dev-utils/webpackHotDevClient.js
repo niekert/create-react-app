@@ -81,14 +81,16 @@ function addOverlayDivTo(iframe) {
 }
 
 function overlayHeaderStyle() {
-  return 'font-size: 2em;' +
+  return (
+    'font-size: 2em;' +
     'font-family: sans-serif;' +
     'color: rgb(206, 17, 38);' +
     'white-space: pre-wrap;' +
     'margin: 0 2rem 0.75rem 0px;' +
     'flex: 0 0 auto;' +
     'max-height: 35%;' +
-    'overflow: auto;';
+    'overflow: auto;'
+  );
 }
 
 var overlayIframe = null;
@@ -127,7 +129,8 @@ function ensureOverlayDivExists(onOverlayDivReady) {
 function showErrorOverlay(message) {
   ensureOverlayDivExists(function onOverlayDivReady(overlayDiv) {
     // TODO: unify this with our runtime overlay
-    overlayDiv.innerHTML = '<div style="' +
+    overlayDiv.innerHTML =
+      '<div style="' +
       overlayHeaderStyle() +
       '">Failed to compile</div>' +
       '<pre style="' +
@@ -158,14 +161,15 @@ function destroyErrorOverlay() {
 }
 
 // Connect to WebpackDevServer via a socket.
+
 var connection = new SockJS(
   url.format({
     protocol: window.location.protocol,
-    hostname: window.location.hostname,
-    port: window.location.port,
+    hostname: process.env.REACT_APP_HMR_HOSTNAME || window.location.hostname,
+    port: process.env.REACT_APP_HMR_PORT || window.location.port,
     // Hardcoded in WebpackDevServer
     pathname: '/sockjs-node',
-  })
+  }),
 );
 
 // Unlike WebpackDevServer client, we won't try to reconnect
@@ -174,7 +178,7 @@ var connection = new SockJS(
 connection.onclose = function() {
   if (typeof console !== 'undefined' && typeof console.info === 'function') {
     console.info(
-      'The development server has disconnected.\nRefresh the page if necessary.'
+      'The development server has disconnected.\nRefresh the page if necessary.',
     );
   }
 };
@@ -231,7 +235,7 @@ function handleWarnings(warnings) {
         if (i === 5) {
           console.warn(
             'There were more warnings in other files.\n' +
-              'You can find a complete log in the terminal.'
+              'You can find a complete log in the terminal.',
           );
           break;
         }
@@ -368,7 +372,7 @@ function tryApplyUpdates(onHotUpdateSuccess) {
       },
       function(err) {
         handleApplyUpdates(err, null);
-      }
+      },
     );
   }
 }
